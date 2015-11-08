@@ -1,12 +1,12 @@
 (function(){
     SG = window.SG = window.SG || {};
 
-    Snake = function(start) {
+    Snake = SG.Snake = function(start) {
       this.dir = "";
       this.segments = [start];
     }
 
-    Coord = function(x, y)  {
+    Coord = SG.Coord = function(x, y)  {
       this.x = x;
       this.y = y;
     }
@@ -50,19 +50,40 @@
       this.dir = newDir;
     }
 
-    Board = function(dim) {
-      this.dim = dim
-      this.snake = new Snake(new Coor(4,4));
+    Board = SG.Board = function(dim) {
+      this.dim = dim;
+      this.snake = new Snake(new Coord(4,4));
       this.apples = [];
+      this.render()
 
     }
 
 
 
     Board.prototype.render = function() {
-      this.grid = this.emptyGrid(dim)
+      this.grid = this.emptyGrid();
+      this.snake.segments.forEach(function(el) {
+        this.grid[el.x][el.y] = "S";
+      }.bind(this));
+
+      return this.grid
+
+
     }
 
+    Board.prototype.emptyGrid = function() {
+      var grid = []
+      for(var i = 0; i < this.dim; i++){
+        var row = []
+        for (var j = 0; j < this.dim; j++){
+          row.push("");
+        };
+        grid.push(row);
+      };
+
+      return grid;
+
+    }
 
 
 }());
