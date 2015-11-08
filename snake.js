@@ -54,29 +54,33 @@
       this.dim = dim;
       this.snake = new Snake(new Coord(4,4));
       this.apples = [];
-      this.render()
 
     }
 
 
 
     Board.prototype.render = function() {
-      this.grid = this.emptyGrid();
+      var grid = Board.emptyGrid(this.dim);
       this.snake.segments.forEach(function(el) {
-        this.grid[el.x][el.y] = "S";
+        grid[el.x][el.y] = "S";
       }.bind(this));
 
-      return this.grid
+      var gridOutput = ""
+      grid.forEach(function(row, i, arr) {
+        gridOutput += (row.join(" ") + "\n")
+      });
+
+      return gridOutput
 
 
     }
 
-    Board.prototype.emptyGrid = function() {
+    Board.emptyGrid = function(dim) {
       var grid = []
-      for(var i = 0; i < this.dim; i++){
+      for(var i = 0; i < dim; i++){
         var row = []
-        for (var j = 0; j < this.dim; j++){
-          row.push("");
+        for (var j = 0; j < dim; j++){
+          row.push(".");
         };
         grid.push(row);
       };
