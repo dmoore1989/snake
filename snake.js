@@ -26,6 +26,9 @@
 
 
     Snake.prototype.move = function(){
+      if (this.dir==="" ){
+        return
+      }
       coord2 = this.generateMove();
       head = this.segments[0]
       tail = this.segments[this.segments.length - 1]
@@ -36,11 +39,11 @@
     Snake.prototype.generateMove = function(){
       switch (this.dir) {
         case "N":
-          return new Coord(1, 0)
+          return new Coord(-1, 0)
         case "E":
           return new Coord(0, 1)
         case "S":
-          return new Coord(-1, 0)
+          return new Coord(1, 0)
         case "W":
           return new Coord(0, -1)
       }
@@ -52,7 +55,8 @@
 
     Board = SG.Board = function(dim) {
       this.dim = dim;
-      this.snake = new Snake(new Coord(4,4));
+      var mid = Math.floor(this.dim/2)
+      this.snake = new Snake(new Coord(mid, mid));
       this.apples = [];
 
     }
@@ -65,10 +69,11 @@
         grid[el.x][el.y] = "S";
       }.bind(this));
 
-      var gridOutput = ""
+      var gridOutput = [];
       grid.forEach(function(row, i, arr) {
-        gridOutput += (row.join(" ") + "\n")
+        gridOutput.push(row.join(" "));
       });
+
 
       return gridOutput
 
@@ -90,4 +95,4 @@
     }
 
 
-}());
+})();
