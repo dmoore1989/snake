@@ -3,13 +3,13 @@
 
     View =SG.View = function($el) {
       this.$el = $el;
-      this.board = new Board(15);
+      this.board = new Board(25);
       this.bindEvents();
-      this.render();
+      this.firstRender();
       setInterval(function(){
         this.board.snake.move();
         this.render();
-      }.bind(this), 500)
+      }.bind(this), 100)
     }
 
     View.prototype.bindEvents = function(){
@@ -29,14 +29,35 @@
       40:"S"
     };
 
-    View.prototype.render =function(){
+    View.prototype.firstRender =function(){
       this.$el.empty();
       var renderedBoard = this.board.render();
 
-      renderedBoard.forEach(function(line){
-        this.$el.append("<p>", line);
-      }.bind(this)
+      renderedBoard.forEach(function(line, i){
+        line.forEach(function(item,j){
+          id = i + " " + j
+          this.$el.append($("<div>").attr("id", id))
+          if (item === "S"){
+            var snake = this.$el.find("div:last")
+            snake.addClass("snake")
+          }
+        }.bind(this))
+        this.$el.append("<br>")
+      }.bind(this))
 
-      )
+    };
+
+    View.prototype.render = function(){
+      this.$el.children().removeClass();
+      var renderedBoard = this.board.render();
+      renderedBoard.forEach(function(line, i){
+        line.forEach(function(item,j){
+          if (item === "S"){
+            var id = i + " " + j
+            snake = $("div[id='" + id + "']")
+            snake.addClass("snake")
+          }
+        }.bind(this))
+      }.bind(this))
     };
 })();

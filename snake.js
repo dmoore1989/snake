@@ -71,7 +71,7 @@
 
       var gridOutput = [];
       grid.forEach(function(row, i, arr) {
-        gridOutput.push(row.join(" "));
+        gridOutput.push(row);
       });
 
 
