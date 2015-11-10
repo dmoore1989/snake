@@ -38,8 +38,11 @@
           id = i + " " + j
           this.$el.append($("<div>").attr("id", id))
           if (item === "S"){
-            var snake = this.$el.find("div:last")
-            snake.addClass("snake")
+            var snake = this.$el.find("div:last");
+            snake.addClass("snake");
+          } else if (item === "A"){
+            var apple= this.$el.find("div:last");
+            apple.addClass("apple");
           }
         }.bind(this))
         this.$el.append("<br>")
@@ -56,6 +59,10 @@
             var id = i + " " + j
             snake = $("div[id='" + id + "']")
             snake.addClass("snake")
+          } else if (item === "A"){
+            var id = i + " " + j;
+            apple = $("div[id='"+ id + "']");
+            apple.addClass("apple");
           }
         }.bind(this))
       }.bind(this))

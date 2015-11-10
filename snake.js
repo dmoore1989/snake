@@ -57,7 +57,7 @@
       this.dim = dim;
       var mid = Math.floor(this.dim/2)
       this.snake = new Snake(new Coord(mid, mid));
-      this.apples = [];
+      this.apple = this.placeApple();
 
     }
 
@@ -68,7 +68,7 @@
       this.snake.segments.forEach(function(el) {
         grid[el.x][el.y] = "S";
       }.bind(this));
-
+      grid[this.apple[0]][this.apple[1]]= "A"
       var gridOutput = [];
       grid.forEach(function(row, i, arr) {
         gridOutput.push(row);
@@ -91,6 +91,14 @@
       };
 
       return grid;
+
+    }
+
+    Board.prototype.placeApple = function(){
+      do{
+        var apple = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
+      } while (this.snake.segments.indexOf(this.apple) !== -1)
+      return apple
 
     }
 
