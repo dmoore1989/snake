@@ -100,7 +100,8 @@
       } while (this.snake.segments.indexOf(this.apple) !== -1)
       return apple
 
-    }
+    };
+
 
 
 })();
