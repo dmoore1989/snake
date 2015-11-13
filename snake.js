@@ -1,9 +1,10 @@
 (function(){
     SG = window.SG = window.SG || {};
 
-    Snake = SG.Snake = function(start) {
+    Snake = SG.Snake = function(start, board) {
       this.dir = "";
       this.segments = [start];
+      this.board = board
     }
 
     Coord = SG.Coord = function(x, y)  {
@@ -24,14 +25,16 @@
     }
 
 
-
     Snake.prototype.move = function(){
       if (this.dir==="" ){
         return
+      } else if (this.board.snakeEatsApple()){
+        this.eatApple();
+        this.board.placeApple();
       }
-      coord2 = this.generateMove();
-      head = this.segments[0]
-      tail = this.segments[this.segments.length - 1]
+      var coord2 = this.generateMove();
+      var head = this.segments[0]
+      var tail = this.segments[this.segments.length - 1]
       this.segments.unshift(head.plus(coord2))
       this.segments.pop(tail)
     };
@@ -47,17 +50,23 @@
         case "W":
           return new Coord(0, -1)
       }
+    };
+
+    Snake.prototype.eatApple = function() {
+      var tail = this.segments[this.segments.length -1];
+      var eatenApple = new Coord(tail[0], tail[1]);
+      this.segments.push(eatenApple);
     }
 
     Snake.prototype.turn = function(newDir) {
       this.dir = newDir;
-    }
+    };
 
     Board = SG.Board = function(dim) {
       this.dim = dim;
       var mid = Math.floor(this.dim/2)
-      this.snake = new Snake(new Coord(mid, mid));
-      this.apple = this.placeApple();
+      this.snake = new Snake(new Coord(mid, mid), this);
+      this.placeApple();
 
     }
 
@@ -68,7 +77,7 @@
       this.snake.segments.forEach(function(el) {
         grid[el.x][el.y] = "S";
       }.bind(this));
-      grid[this.apple[0]][this.apple[1]]= "A"
+      grid[this.apple.x][this.apple.y]= "A"
       var gridOutput = [];
       grid.forEach(function(row, i, arr) {
         gridOutput.push(row);
@@ -89,18 +98,28 @@
         };
         grid.push(row);
       };
-
       return grid;
-
     }
 
     Board.prototype.placeApple = function(){
       do{
-        var apple = [Math.floor(Math.random() * 10), Math.floor(Math.random() * 10)];
-      } while (this.snake.segments.indexOf(this.apple) !== -1)
-      return apple
-
+        var apple = new Coord (Math.floor(Math.random() * 10), Math.floor(Math.random() * 10));
+      } while (this.notOnSnake(apple))
+      this.apple = apple
     };
+
+    Board.prototype.notOnSnake = function (coord) {
+      for(var i = 0; i < this.snake.segments.length; i++){
+        if (this.snake.segments[i].equals(coord)) {
+          return true
+        }
+      }
+      return false
+    };
+
+    Board.prototype.snakeEatsApple = function() {
+      return (this.notOnSnake(this.apple));
+    }
 
 
 

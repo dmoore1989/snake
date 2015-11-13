@@ -7,6 +7,7 @@
       this.bindEvents();
       this.firstRender();
       setInterval(function(){
+
         this.board.snake.move();
         this.render();
       }.bind(this), 100)
