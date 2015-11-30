@@ -87,6 +87,7 @@
       var head = this.segments[0];
       var eatenApple = new Coord(head[0], head[1]);
       this.segments.push(eatenApple);
+      this.board.score += 10;
     };
 
 
@@ -155,11 +156,11 @@
       var newApple;
       do{
         newApple = new Coord (Math.floor(Math.random() * 10), Math.floor(Math.random() * 10));
-      } while (this.notOnSnake(newApple));
+      } while (this.onSnake(newApple));
       this.apple = newApple;
     };
 
-    Board.prototype.notOnSnake = function (coord) {
+    Board.prototype.onSnake = function (coord) {
       for(var i = 0; i < this.snake.segments.length; i++){
         if (this.snake.segments[i].equals(coord)) {
           return true;
@@ -169,7 +170,7 @@
     };
 
     Board.prototype.snakeEatsApple = function() {
-      return (this.notOnSnake(this.apple));
+      return (this.onSnake(this.apple));
     };
 
 
