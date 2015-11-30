@@ -31,6 +31,12 @@ div {
   background-color: white;
 }
 
+.grid .scoreboard {
+  display: block;
+  width: 450px;
+  border: 1px solid red;
+}
+
 .grid div.apple:after{
   content: "";
   color: red;

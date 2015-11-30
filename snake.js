@@ -3,14 +3,23 @@
 
     Snake = SG.Snake = function(start, board) {
       this.dir = "";
-      this.segments = [start, start, start, start];
+      this.start = start;
+      this.segments = [this.start, this.start, this.start, this.start];
       this.board = board;
+      this.turnInstructions = [];
     };
+
+    Snake.prototype.resetSnake= function () {
+      this.dir = "";
+      this.segments = [this.start, this.start, this.start, this.start];
+    }
+
 
     Coord = SG.Coord = function(x, y)  {
       this.x = x;
       this.y = y;
     };
+
 
     Coord.prototype.plus = function(coord2) {
       return new Coord((this.x + coord2.x), (this.y + coord2.y));
@@ -24,20 +33,41 @@
       return (this.x == (-1 * coord2.x)) && (this.y == (-1 * coord2.y));
     };
 
+    Snake.prototype.addTurnInstructions = function (directions) {
+      this.turnInstructions = this.turnInstructions.concat(directions);
+    };
 
-    Snake.prototype.move = function(){
-      if (this.dir==="" ){
+    Snake.prototype.move = function (directions) {
+      this.addTurnInstructions(directions);
+      if (this.turnInstructions.length > 0) {
+        this.turn();
+      } else if (this.dir=== "" ) {
         return;
       }
       var coord2 = this.generateMove(this.dir);
       var head = this.segments[0];
       var tail = this.segments[this.segments.length - 1];
       this.segments.unshift(head.plus(coord2));
-      if (this.board.snakeEatsApple()){
+      if (this.checkCollision(this.segments[0])){
+        this.board.takeLife();
+        this.resetSnake();
+      } else if (this.board.snakeEatsApple()){
         this.eatApple();
         this.board.placeApple();
       }
       this.segments.pop(tail);
+    };
+
+    Snake.prototype.checkCollision = function (head) {
+      if (head.x < 0 || head.y < 0 || head.x >= this.board.dim || head.y >= this.board.dim) {
+        return true;
+      }
+
+      for (var i = 1; i < this.segments.length; i++ ){
+        if (head.equals(this.segments[i])) {
+          return true;
+        }
+      }
     };
 
     Snake.prototype.generateMove = function(dir){
@@ -59,31 +89,31 @@
       this.segments.push(eatenApple);
     };
 
-    Snake.prototype.turn = function(dirArr) {
-      var oldCoord = this.generateMove(this.dir);
-      if (dirArr.length > 0) {
-        dirArr.forEach(function (newDir, idx) {
-          var newCoord = this.generateMove(newDir);
-          if (!oldCoord || !oldCoord.isOpp(newCoord)) {
-            dirArr.splice(idx, 1);
-            dirArr.push(newDir);
-          }
-        }, this);
-        dirArr.forEach(function (newDir, idx) {
-          newCoord = this.generateMove(newDir);
-          if (!oldCoord.isOpp(newCoord))
-            this.dir = newDir[0];
 
-      }, this);
+    Snake.prototype.turn = function() {
+      var oldCoord = this.generateMove(this.dir);
+      if (!oldCoord || !oldCoord.isOpp(this.generateMove(this.turnInstructions[0]))) {
+        this.dir = this.turnInstructions.shift();
+        return;
+      }
+      for (var i = 0; i < this.turnInstructions.length; i++) {
+        if (!oldCoord.isOpp(this.generateMove(this.turnInstructions[0]))) {
+          this.turn();
+          return;
+        }
+        this.turnInstructions.push(this.turnInstructions.shift());
+      }
+      this.turnInstructions = [];
     };
 
     Board = SG.Board = function(dim) {
       this.dim = dim;
+      this.life = 3;
       var mid = Math.floor(this.dim/2);
       this.snake = new Snake(new Coord(mid, mid), this);
-
       this.placeApple();
-
+      this.score = 0;
+      this.over = false;
     };
 
 
@@ -100,6 +130,13 @@
       });
 
       return gridOutput;
+    };
+
+    Board.prototype.takeLife = function () {
+      this.life -= 1;
+      if (this.life === 0) {
+        this.over = true;
+      }
     };
 
     Board.emptyGrid = function(dim) {

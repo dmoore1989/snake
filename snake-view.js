@@ -4,15 +4,21 @@
     View =SG.View = function ($el) {
       this.$el = $el;
       this.board = new Board(25);
-      this.turnInstructions = [];
+      this.directions = [];
       this.bindEvents();
       this.firstRender();
-      setInterval(function(){
-        this.board.snake.turn(this.turnInstructions);
-        this.board.snake.move();
-        this.render();
-        this.turnInstructions = [];
-      }.bind(this), 100);
+      this.currentScore = this.board.score;
+      this.currentLife = this.board.life;
+      game = setInterval(function(){
+        if (!this.board.over) {
+          this.render();
+          this.board.snake.move(this.directions);
+          this.directions = [];
+        } else {
+          clearInterval(game);
+        }
+
+        }.bind(this), 100);
     };
 
     View.prototype.bindEvents = function () {
@@ -23,7 +29,7 @@
       e.preventDefault();
       var key = View.DIRECTIONS[e.keyCode];
       if (typeof key !== "undefined") {
-        this.turnInstructions.push(key);
+        this.directions.push(key);
      }
     };
 
@@ -52,6 +58,8 @@
         }.bind(this));
         this.$el.append("<br>");
       }.bind(this));
+      $(".score").append(this.board.score);
+      $(".life").append(this.board.life);
 
     };
 
@@ -70,5 +78,12 @@
           }
         }.bind(this));
       }.bind(this));
+      if (this.board.score !== this.currentScore) {
+        $(".score").replaceWith('<span class="score">' + this.board.score + "</span>");
+        this.currentScore = this.board.score;
+      } else if (this.board.life !== this.currentLife) {
+        $(".life").replaceWith('<span class="life">' + this.board.life+ "</span>");
+        this.currentLife = this.board.life;
+      }
     };
 })();
