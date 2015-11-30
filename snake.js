@@ -11,7 +11,7 @@
 
     Snake.prototype.resetSnake= function () {
       this.dir = "";
-      this.segments = [this.start, this.start, this.start, this.start];
+      this.segments = [this.start, this.start, this.start, this.start, this.start];
     }
 
 

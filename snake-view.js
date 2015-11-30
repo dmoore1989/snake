@@ -16,6 +16,8 @@
           this.directions = [];
         } else {
           clearInterval(game);
+          console.log("interval!!!")
+          this.renderRestartModal();
         }
 
         }.bind(this), 100);
