@@ -16,8 +16,9 @@
           this.board.snake.move(this.directions);
           this.directions = [];
         } else {
+          this.render();
           clearInterval(game);
-          this.modal.renderRestartModal(this.board.score)
+          this.modal.renderRestartModal(this.board.score);
         }
       }.bind(this), 100);
 
@@ -60,8 +61,8 @@
         }.bind(this));
         this.$el.append("<br>");
       }.bind(this));
-      $(".score").append(this.board.score);
-      $(".life").append(this.board.life);
+      $(".score").replaceWith('<span class="score">' + this.board.score + "</span>");
+      $(".life").replaceWith('<span class="life">' + this.board.life+ "</span>");
 
     };
 
