@@ -80,4 +80,14 @@ body {
   color: white;
   padding: 20px;
   margin: 10px auto;
+  opacity: 1;
+  transition: opacity 2s;
+}
+
+.message button:hover {
+  opacity: .5
+}
+
+.faded button {
+  opacity: 0.1
 }
