@@ -1,7 +1,8 @@
 (function(){
     SG = window.SG = window.SG || {}
 
-    View =SG.View = function ($el) {
+    View =SG.View = function ($el, modal) {
+      this.modal = modal
       this.$el = $el;
       this.board = new Board(25);
       this.directions = [];
@@ -16,11 +17,10 @@
           this.directions = [];
         } else {
           clearInterval(game);
-          console.log("interval!!!")
-          this.renderRestartModal();
+          this.modal.renderRestartModal(this.board.score)
         }
+      }.bind(this), 100);
 
-        }.bind(this), 100);
     };
 
     View.prototype.bindEvents = function () {
