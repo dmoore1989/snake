@@ -39,7 +39,7 @@
     this.bindEvents();
     setTimeout(function () {
       $(".faded").removeClass("faded");
-    },100);
+    },3000);
   };
 
 

@@ -11,7 +11,7 @@ div, span, button {
 
 body {
   font-family: sans-serif;
-  background-color: red;
+  background-color: #540004;
 }
 .title {
   display: block;
@@ -62,7 +62,7 @@ body {
 
 .grid div.apple:after{
   content: "";
-  color: red;
+  color: #540004;
   font-size: 16px
 }
 .grid div.snake{
@@ -70,24 +70,19 @@ body {
 }
 
 .message {
+  opacity: 1;
   text-align: center;
 }
 
 .message button {
   display: block;
   font-size: 16px;
-  background-color: red;
+  background-color: #540004;
   color: white;
   padding: 20px;
   margin: 10px auto;
-  opacity: 1;
-  transition: opacity 2s;
 }
 
 .message button:hover {
   opacity: .5
-}
-
-.faded button {
-  opacity: 0.1
 }
